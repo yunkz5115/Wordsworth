@@ -6,7 +6,7 @@ from scipy.io import wavfile as WF
 from scipy.io.wavfile import write
 
 # set up environment: provide service aaccount key/credentials
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './healthy-result-378719-3d2d70e5dde1.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './your json credential file.json'
 
 # Instantiates a client
 client = texttospeech_v1.TextToSpeechClient()
