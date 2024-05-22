@@ -214,7 +214,7 @@ for i in range(len(words)):
         x = ch.autograd.Variable(ch.Tensor(audio), requires_grad=True)
         y = cochleagram(x)
         
-        path = ''.join(['./DL_Set/NS_Chcochleagram/train/',words[i]])
+        path = ''.join(['./DL_Set/NS_Chcochleagram/Full/',words[i]])
         os.makedirs(path, exist_ok=True)
         np.savetxt(''.join([path,'/',name[j][0:(len(name[j])-4)],'.txt'])
                    ,np.squeeze(y.detach().numpy()))
@@ -253,4 +253,4 @@ for i in range(len(words)):
     
     print(' duration = ',np.around(t_end-t_start,3),' s ')
     
-print(' NS Train set finished. ')
+print(' NS Full set finished. ')
