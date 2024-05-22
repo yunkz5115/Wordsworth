@@ -156,5 +156,5 @@ class WaveDataLoader_Voice(torch.utils.data.Dataset):
 def generate_WW_subset(root_path,target_path,word,speaking_rate='_',talker='_',accent='_',model='_'):
     filelist=os.listdir(root_path+'/'+word+'/')
     for token in trange(filelist):
-        if (word in token)&(speaking_rate in token)&(talker in token)&(accent in token)&(model in token):
+        if (word in token)&(str(speaking_rate) in token)&(talker in token)&(accent in token)&(model in token):
             copyfile(root_path+'/'+word+'/'+token, target_path+'/'+word+'/'+token)
