@@ -163,5 +163,6 @@ def generate_WW_subset(root_path,target_path,word,speaking_rate='_',talker='_',a
     elif attributes=='zip':
         zfile=zipfile.ZipFile(target_path+'/'+'WW_subset.zip',"w")
         for token in trange(filelist):
-            zfile.write(root_path+'train/'+word+'/'+token)
+            if (word in token)&(speaking_rate in token)&(talker in token)&(accent in token)&(model in token):
+                zfile.write(root_path+'train/'+word+'/'+token)
         zfile.close()
