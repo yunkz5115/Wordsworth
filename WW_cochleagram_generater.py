@@ -84,7 +84,7 @@ cochleagram = chcochleagram.cochleagram.Cochleagram(filters,
                                                     compression=compression)
 #-----------------------------------------------------------------------------#
 #Train set
-filepath='./DL_Set/NS_Normalized/train/'
+filepath='root_path/DeepLearning_Superset/train/'
 words = os.listdir(filepath)
 for i in range(len(words)):
     t_start = perf_counter()
@@ -141,7 +141,7 @@ for i in range(len(words)):
 print(' NS Train set finished. ')
 #-----------------------------------------------------------------------------#
 #Test set
-filepath='./DL_Set/NS_Normalized/test/'
+filepath='root_path/DeepLearning_Superset/test/'
 words = os.listdir(filepath)
 for i in range(len(words)):
     t_start = perf_counter()
@@ -196,3 +196,61 @@ for i in range(len(words)):
     print(' duration = ',np.around(t_end-t_start,3),' s ')
     
 print(' NS Test set finished. ')
+
+#-----------------------------------------------------------------------------#
+#Full set
+filepath='root_path/Wordsworth_v1.0/'
+words = os.listdir(filepath)
+for i in range(len(words)):
+    t_start = perf_counter()
+    name = os.listdir(''.join([filepath,words[i]]))
+    kkk = 0;
+    for j in range(len(name)):
+        fs,audio = wavfile.read(''.join([filepath,words[i],'/',name[j]]))
+        if len(audio)<signal_size:
+            audio = np.append(audio,np.zeros(signal_size-len(audio)))
+        elif len(audio)>signal_size:
+            audio = np.delete(audio,np.arange(signal_size,len(audio)),0)
+        x = ch.autograd.Variable(ch.Tensor(audio), requires_grad=True)
+        y = cochleagram(x)
+        
+        path = ''.join(['./DL_Set/NS_Chcochleagram/train/',words[i]])
+        os.makedirs(path, exist_ok=True)
+        np.savetxt(''.join([path,'/',name[j][0:(len(name[j])-4)],'.txt'])
+                   ,np.squeeze(y.detach().numpy()))
+        
+        if j<3:
+            # Plot the cochleagram
+            path = ''.join(['./DL_Set/NS_Chcochleagram_figure/train/',words[i]])
+            os.makedirs(path, exist_ok=True)
+            fig1=plt.figure()
+            plt.imshow(np.squeeze(y.detach().numpy()), origin='lower', extent=(0, y.shape[1], 0, y.shape[0]))
+            
+            ## Depending on the temporal padding the cochleagram length may not be exactly equal env_sr*signal_size/sr
+            # Because of this, set the x-axis tick labels based on the original audio. 
+            num_ticks = 9
+            x_tick_numbers = [t_num*y.shape[-1]/(num_ticks-1) for t_num in range(num_ticks)]
+            x_tick_labels = [t_num*signal_size/sr/(num_ticks-1) for t_num in range(num_ticks)]
+            plt.xticks(x_tick_numbers, x_tick_labels)
+            plt.xlabel('Time (s)')
+            
+            ## Label the frequency axis based on the center frequencies for the ERB filters. 
+            filters.filter_extras['cf']
+            # Use ticks starting at the lowest non-lowpass filter center frequency. 
+            y_ticks = [y_t+3 for y_t in plt.yticks()[0] if y_t<=y.shape[0]]
+            plt.yticks(y_ticks, [int(round(filters.filter_extras['cf'][int(f_num)])) for f_num in y_ticks])
+            plt.ylabel('Frequency (Hz)')
+            plt.title(words[i])
+            t_end = perf_counter()
+            fig1.savefig(''.join([path,'/',name[j][0:(len(name[j])-4)],'.svg']),dpi=600)
+            plt.close()
+            
+        kkk = kkk + 1
+        if kkk>(len(name)/80):
+            kkk = 0
+            print ('=>',end="")
+        t_end = perf_counter()
+    
+    print(' duration = ',np.around(t_end-t_start,3),' s ')
+    
+print(' NS Train set finished. ')
