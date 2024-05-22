@@ -221,7 +221,7 @@ for i in range(len(words)):
         
         if j<3:
             # Plot the cochleagram
-            path = ''.join(['./DL_Set/NS_Chcochleagram_figure/train/',words[i]])
+            path = ''.join(['./DL_Set/NS_Chcochleagram_figure/Full/',words[i]])
             os.makedirs(path, exist_ok=True)
             fig1=plt.figure()
             plt.imshow(np.squeeze(y.detach().numpy()), origin='lower', extent=(0, y.shape[1], 0, y.shape[0]))
