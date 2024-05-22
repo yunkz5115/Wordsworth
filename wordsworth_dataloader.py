@@ -154,15 +154,15 @@ class WaveDataLoader_Voice(torch.utils.data.Dataset):
         
         return image, label, voice_type
 
-def generate_WW_subset(root_path,target_path,word,speaking_rate='_',talker='_',accent='_',model='_',attributes='copy'):
-    filelist=os.listdir(root_path+'train/'+word+'/')
+def generate_WW_subset(root_path,target_path,word,speaking_rate='',talker='',accent='',model='',attributes='copy'):
+    filelist=os.listdir(root_path+'/train/'+word+'/')
     if attributes=='copy':
-        for token in trange(filelist):
-            if (word in token)&(speaking_rate in token)&(talker in token)&(accent in token)&(model in token):
-                copyfile(root_path+'train/'+word+'/'+token, target_path+'/'+word+'/'+token)
+        for token in filelist:
+            if (word+'_' in token)&('_'+str(speaking_rate) in token)&('_'+talker in token)&('-'+accent in token)&('-'+model in token):
+                copyfile(root_path+'/train/'+word+'/'+token, target_path+'/'+'/'+token)
     elif attributes=='zip':
         zfile=zipfile.ZipFile(target_path+'/'+'WW_subset.zip',"w")
-        for token in trange(filelist):
-            if (word in token)&(speaking_rate in token)&(talker in token)&(accent in token)&(model in token):
-                zfile.write(root_path+'train/'+word+'/'+token)
+        for token in filelist:
+            if (word+'_' in token)&('_'+str(speaking_rate) in token)&('_'+talker in token)&('-'+accent in token)&('-'+model in token):
+                zfile.write(root_path+'/train/'+'/'+token)
         zfile.close()
