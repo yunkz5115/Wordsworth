@@ -9,6 +9,9 @@ import numpy as np
 import torch
 from scipy.io.wavfile import read
 from torchaudio import transforms
+from tqdm import trange
+import os
+from shutil import copyfile
 
 class WaveDataLoader(torch.utils.data.Dataset):
     def __init__(self, img_dir, img_label_dir, transform=transforms.Resample(orig_freq=24000, new_freq=8000)):
@@ -149,3 +152,9 @@ class WaveDataLoader_Voice(torch.utils.data.Dataset):
             image = self.transform(image)  # apply transform
         
         return image, label, voice_type
+
+def generate_WW_subset(root_path,target_path,word,speaking_rate='_',talker='_',accent='_',model='_'):
+    filelist=os.listdir(root_path+'/'+word+'/')
+    for token in trange(filelist):
+        if (word in token)&(speaking_rate in token)&(talker in token)&(accent in token)&(model in token):
+            copyfile(root_path+'/'+word+'/'+token, target_path+'/'+word+'/'+token)
