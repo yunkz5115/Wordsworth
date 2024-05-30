@@ -11,7 +11,14 @@ import chcochleagram
 import os
 from time import perf_counter
 from scipy.io import wavfile
+import argparse
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+#-----------------------------------------------------------------------------#
+parser = argparse.ArgumentParser(description='manual to this script')
+parser.add_argument('--train_path', type=str, default = 'root_path/DeepLearning_Superset/train/')
+parser.add_argument('--test_path', type=str, default = 'root_path/DeepLearning_Superset/test/')
+parser.add_argument('--full_path', type=str, default = 'root_path/Wordsworth_v1.0/')
+args = parser.parse_args()
 #-----------------------------------------------------------------------------#
 device = ch.device("cuda" if ch.cuda.is_available() else "cpu")
 print(device)
@@ -84,7 +91,7 @@ cochleagram = chcochleagram.cochleagram.Cochleagram(filters,
                                                     compression=compression)
 #-----------------------------------------------------------------------------#
 #Train set
-filepath='root_path/DeepLearning_Superset/train/'
+filepath=arg.train_path
 words = os.listdir(filepath)
 for i in range(len(words)):
     t_start = perf_counter()
@@ -141,7 +148,7 @@ for i in range(len(words)):
 print(' NS Train set finished. ')
 #-----------------------------------------------------------------------------#
 #Test set
-filepath='root_path/DeepLearning_Superset/test/'
+filepath=arg.test_path
 words = os.listdir(filepath)
 for i in range(len(words)):
     t_start = perf_counter()
@@ -199,7 +206,7 @@ print(' NS Test set finished. ')
 
 #-----------------------------------------------------------------------------#
 #Full set
-filepath='root_path/Wordsworth_v1.0/'
+filepath=arg.full_path
 words = os.listdir(filepath)
 for i in range(len(words)):
     t_start = perf_counter()
